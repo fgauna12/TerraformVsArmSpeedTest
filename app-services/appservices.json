@@ -1,0 +1,59 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymenttemp2late.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "count": {
+           "type": "int",
+           "defaultValue": 10
+        }
+    },
+    "variables": {
+    },
+    "resources": [
+        {
+            "copy": {
+                "name": "plancopy",
+                "count": "[parameters('count')]"
+            },
+            "name": "[concat('sp-temp2-', copyIndex())]",
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2018-02-01",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "S1",
+                "capacity": 1
+            },
+            "tags": {
+                "displayName": "[concat('sp-temp2-', copyIndex())]"
+            },
+            "properties": {
+                "name": "[concat('sp-temp2-', copyIndex())]"
+            }
+        },
+        {
+            "copy": {
+                "name": "webappcopy",
+                "count": "[parameters('count')]"
+            },
+            "name": "[concat('azapp-temp2-', copyIndex())]",
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-11-01",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', concat('sp-temp2-', copyIndex()))]": "Resource",
+                "displayName": "[concat('azapp-temp2-', copyIndex())]"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', concat('sp-temp2-', copyIndex()))]"
+            ],
+            "properties": {
+                "name": "[concat('azapp-temp2-', copyIndex())]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', concat('sp-temp2-', copyIndex()))]"
+            }
+        }
+    ],
+    "outputs": {
+    },
+    "functions": [
+    ]
+}
