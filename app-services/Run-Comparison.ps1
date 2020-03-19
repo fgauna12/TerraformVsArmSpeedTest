@@ -44,8 +44,8 @@ function Reset-All {
     az group delete -g $resourceGroup -y
 }
 
-# Invoke-TerraformTest
-# Invoke-ArmTest
+Invoke-TerraformTest
+Invoke-ArmTest
 Reset-All
 
 
