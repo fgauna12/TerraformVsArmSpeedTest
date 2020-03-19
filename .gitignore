@@ -1,0 +1,3 @@
+app-services/.terraform/
+app-services/terraform.tfstate.backup
+app-services/terraform.tfstate
